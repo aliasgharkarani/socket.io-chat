@@ -28,12 +28,12 @@
             <div class="col-md-8">
                 <div class="chat" id="chat"></div>
 
-                <form id="messageForm">
+                <form id="messageForm" onsubmit="event.preventDefault();">
                     <div class="form-group">
                         <label for="msg">Write Message</label>
                         <textarea name="message" id="message" cols="30" rows="3" class="form-control"></textarea>
                         <br/>
-                        <input type="submit" class="btn btn-primary" value="Send Message">
+                        <input id="submit-btn" type="submit" class="btn btn-primary" value="Send Message">
                     </div>
                 </form>
             </div>
@@ -43,7 +43,21 @@
     <script>
         (() => {
             var socket = io.connect()
-            console.log('socket', socket)
+            var messageForm = document.getElementById('messageForm')
+            var message = document.getElementById('message')
+            var chat = document.getElementById('chat')
+
+            document.getElementById("submit-btn").addEventListener("click", () => {
+                socket.emit('send message', message.value)
+                message.value = ''
+            });
+
+            socket.on('new message', (data) => {
+                var div = document.createElement("div");
+                div.className = 'alert alert-secondary'
+                div.innerText = data.payload
+                chat.appendChild(div);
+            })
         })()
     </script>
 
