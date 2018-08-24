@@ -14,14 +14,15 @@
     document.body.appendChild(iframe);
     var body = ' \
         <div id="intercom-container"> \
-        <div class="intercom-messenger intercom-messenger-home-screen intercom-messenger-from-booting" onscroll="scrollMessangerBody()"> \
+        <div id="wrapper" class="intercom-messenger intercom-messenger-home-screen intercom-messenger-from-booting" onscroll="scrollMessangerBody()"> \
             <div class="intercom-messenger-header"> \
                 <span> \
-                    <div class="intercom-home-screen-header"> \
+                    <div class="intercom-home-screen-header" id="messanger-header"> \
                         <div class="intercom-home-screen-header-body-container" style="transform: translateY(0px); opacity: 1;"> \
                             <div class="intercom-home-screen-header-body"> \
                                 <div class="intercom-home-screen-header-logo"> \
-                                    <img src="https://facetone.s3.amazonaws.com/profile-pic/LOGO.png" alt="Intercom logo"/> \
+                                    <button type="button" id="backToViewOneBtn" onclick="showViewOne()">back</button>\
+                                    <img src="./logo.png" alt="Intercom logo"/> \
                                 </div> \
                                 <div class="intercom-fit-text" style="font-size: 30px; max-width: 296px;"> \
                                     <span class="intercom-home-screen-header-greeting">Hi,</span> \
@@ -33,9 +34,10 @@
                 </span> \
             </div> \
             <div class="intercom-messenger-body" id="intercom-messenger-body-id"></div> \
+            <div class="intercom-messenger-body" id="messenger-body-view-2-id"></div> \
             <div class="intercom-footer" id="intercom-footer-id"> \
                 <div class="message-text-field-wrapper"> \
-                    <textarea id="message-text-field" placeholder="Send a message…"  onkeypress="onSendMessage();" onfocus="focusInMsgField()" onblur="focusOutMsgField()"></textarea> \
+                    <textarea id="message-text-field" placeholder="Send a message…"  onkeypress="onSendMessage();" onfocus="focusInMsgField();" onblur="focusOutMsgField()"></textarea> \
                 </div> \
                 <div class="intercom-composer-buttons"> \
                     <button class="intercom-composer-gif-button"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" width="29px" height="20px" viewBox="0 0 439.875 439.875" style="enable-background:new 0 0 439.875 439.875;" xml:space="preserve"><g><g><path d="M76.5,191.25v57.375c0,21.037,17.212,38.25,38.25,38.25h57.375v-15.3V229.5v-19.125H114.75V229.5H153v38.25h-38.25    c-11.475,0-19.125-7.65-19.125-19.125V191.25c0-11.475,7.65-19.125,19.125-19.125h57.375V153H114.75    C93.712,153,76.5,170.212,76.5,191.25z" fill="#cccccc"/><polygon points="191.25,172.125 210.375,172.125 210.375,267.75 191.25,267.75 191.25,286.875 248.625,286.875 248.625,267.75     229.5,267.75 229.5,172.125 248.625,172.125 248.625,153 191.25,153   " fill="#cccccc"/><path d="M382.5,95.625H57.375C24.862,95.625,0,120.487,0,153v133.875c0,32.513,24.862,57.375,57.375,57.375H382.5    c32.513,0,57.375-24.862,57.375-57.375V153C439.875,120.487,415.013,95.625,382.5,95.625z M420.75,286.875    c0,21.037-17.213,38.25-38.25,38.25H57.375c-21.038,0-38.25-17.213-38.25-38.25V153c0-21.038,17.212-38.25,38.25-38.25H382.5    c21.037,0,38.25,17.212,38.25,38.25V286.875z" fill="#cccccc"/><polygon points="267.75,286.875 286.875,286.875 286.875,229.5 344.25,229.5 344.25,210.375 286.875,210.375 286.875,172.125     363.375,172.125 363.375,153 267.75,153   " fill="#cccccc"/></g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg></button>\
@@ -46,6 +48,26 @@
             </div> \
         </div> \
     </div> \
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" crossorigin="anonymous"></script>   \\\
+    <script> \
+        var socket = io.connect("localhost:3100"); \
+        var wrapper = document.getElementById("wrapper"); \
+        var messangerBodyView2 = document.getElementById("messenger-body-view-2-id");\
+        var messangerBodyView1 = document.getElementById("intercom-messenger-body-id"); \
+        var backToViewOneBtn = document.getElementById("backToViewOneBtn");\
+        var view2Footer = document.getElementById("intercom-footer-id"); \
+        var messangerHeader = document.getElementById("messanger-header"); \
+        wrapper.style.marginBottom = "5px"; \
+        messangerBodyView2.style.display = "none"; \
+        view2Footer.style.display = "none"; \
+        backToViewOneBtn.style.display = "none"; \
+        socket.on("new message", (payload) => { \
+            createDiv(messangerBodyView2, "textMessage-" + textMessageCount, "textMessage"); \
+            var textMessageParent = document.getElementById("textMessage-" + textMessageCount); \
+            textMessageParent.innerHTML = payload.msg; \
+            textMessageCount++; \
+        }) \
+    </script> \
     <script> \
         var textMessageCount = 0; \
         function scrollMessangerBody(){ \
@@ -64,7 +86,7 @@
        function onMouseSend(){\
             var text = document.getElementById("message-text-field").value; \
                 document.getElementById("message-text-field").value = ""; \
-                sendMessage(text); \
+                socket.emit("send message", text); \
                 return false; \
        }\
         function onSendMessage() { \
@@ -72,7 +94,7 @@
             if (key === 13) { \
                 var text = document.getElementById("message-text-field").value; \
                 document.getElementById("message-text-field").value = ""; \
-                sendMessage(text); \
+                socket.emit("send message", text); \
                 return false; \
             } \
             else { \
@@ -80,11 +102,11 @@
             } \
         } \
         function sendMessage(msg){ \
-            var intercomMessengerBody = document.getElementById("intercom-messenger-body-id"); \
-            createDiv(intercomMessengerBody, "textMessage-" + textMessageCount, "textMessage"); \
+            socket.emit("send message", msg); \
+            createDiv(messangerBodyView1, "textMessage-" + textMessageCount, "textMessage"); \
             var textMessageParent = document.getElementById("textMessage-" + textMessageCount); \
             textMessageParent.innerHTML = msg; \
-            textMessageCount++ \
+            textMessageCount++; \
         } \
         function createDiv(parent, id, className) { \
             let div = createNode("DIV"); \
@@ -95,9 +117,27 @@
         function createNode(element) { \
             return document.createElement(element); \
         } \
+        function showViewOne(){ \
+            messangerBodyView1.style.display = "block"; \
+            backToViewOneBtn.style.display = "none"; \
+            messengerBodyView2.style.display = "none"; \
+            messengerBodyView2.style.marginTop = "50px"; \
+            view2Footer.style.display = "none"; \
+            wrapper.style.marginBottom = "5px"; \
+            messangerHeader.style.overflow = "hidden"; \
+            messangerHeader.style.height = "220px"; \
+        }\
       </script> \
     '
+
     iframe.contentWindow.document.write(body);
+    // add socket.io script tag as CDN
+    // var iframeSocketCDN = document.createElement("SCRIPT");
+    // iframeSocketCDN.src = 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js'
+    // iframeSocketCDN.crossorigin = 'anonymous'
+    // iframe.contentWindow.document.head.appendChild(iframeSocketCDN)
+
+    // add css style sheet
     var iframeCssFile = document.createElement("LINK");
     iframeCssFile.rel = 'stylesheet';
     iframeCssFile.type = 'text/css';
@@ -407,12 +447,17 @@
     }
 
     // this code identify which card you want to create
-    var intercomMessengerBody = iframe.contentWindow.document.getElementById('intercom-messenger-body-id');
+    var messangerBodyView1 = idocument.getElementById('intercom-messenger-body-id');
+    var messengerBodyView2 = idocument.getElementById('messenger-body-view-2-id');
+    var view2Footer = idocument.getElementById('intercom-footer-id');
+    var wrapper = idocument.getElementById("wrapper");
+    var messangerHeader = idocument.getElementById("messanger-header");
+    var backToViewOneBtn = idocument.getElementById("backToViewOneBtn");
     function createCard(payload) {
         switch (payload.template_type) {
             case 'generic':
-                createDiv(intercomMessengerBody, 'generic-cards-container', 'generic-cards-container blue-horizontal-scroll') //parent, id, className
-                var genericCardsContainer = iframe.contentWindow.document.getElementById('generic-cards-container');
+                createDiv(messangerBodyView1, 'generic-cards-container', 'generic-cards-container blue-horizontal-scroll') //parent, id, className
+                var genericCardsContainer = idocument.getElementById('generic-cards-container');
                 payload.elements && payload.elements.map((card, i) => {
                     let divID = payload.template_type + '-' + genericCard;
                     let div = createNode('div')
@@ -429,7 +474,7 @@
                 let div = createNode('div');
                 div.id = divID;
                 div.className = 'button-card-container'
-                append(intercomMessengerBody, div)
+                append(messangerBodyView1, div)
                 createButtonCard(payload, divID)
                 break;
 
@@ -438,7 +483,7 @@
                 let ListItemParentDiv = createNode('div');
                 ListItemParentDiv.id = ListItemParentId;
                 ListItemParentDiv.className = 'list-card-container'
-                append(intercomMessengerBody, ListItemParentDiv)
+                append(messangerBodyView1, ListItemParentDiv)
                 createListCard(payload, ListItemParentId)
                 break;
 
@@ -448,14 +493,14 @@
                     let mediaCardParentDiv = createNode('div');
                     mediaCardParentDiv.id = mediaCardParentId;
                     mediaCardParentDiv.className = 'media-card-container default-container'
-                    append(intercomMessengerBody, mediaCardParentDiv)
+                    append(messangerBodyView1, mediaCardParentDiv)
                     createMediaCard(card, mediaCardParentId)
                 })
                 break;
 
             case 'receipt':
                 let receiptItemParentId = 'receipt-card-' + receiptCardCount;
-                createDiv(intercomMessengerBody, receiptItemParentId, 'receipt-card-container default-container') //parent, id, className
+                createDiv(messangerBodyView1, receiptItemParentId, 'receipt-card-container default-container') //parent, id, className
                 createReceiptCard(payload, receiptItemParentId)
                 break;
         }
@@ -468,16 +513,16 @@
     }
 
     function createMessageNode(msg) {
-        var intercomMessengerBody = iframe.contentWindow.document.getElementById("intercom-messenger-body-id");
-        createDiv(intercomMessengerBody, "receiveTextMessage-" + receiveTextMessageCount, "textMessage");
+        var messangerBodyView1 = iframe.contentWindow.document.getElementById("intercom-messenger-body-id");
+        createDiv(messangerBodyView1, "receiveTextMessage-" + receiveTextMessageCount, "textMessage");
         var textMessageParent = iframe.contentWindow.document.getElementById("receiveTextMessage-" + receiveTextMessageCount);
         textMessageParent.innerHTML = msg;
         receiveTextMessageCount++
     }
 
     function createQuickReplyButtons(quick_replies) {
-        var intercomMessengerBody = iframe.contentWindow.document.getElementById("intercom-messenger-body-id");
-        createDiv(intercomMessengerBody, "quick-reply-buttons", "quick-reply-buttons blue-horizontal-scroll");
+        var messangerBodyView1 = iframe.contentWindow.document.getElementById("intercom-messenger-body-id");
+        createDiv(messangerBodyView1, "quick-reply-buttons", "quick-reply-buttons blue-horizontal-scroll");
         var quickReplyButtons = iframe.contentWindow.document.getElementById("quick-reply-buttons");
         quick_replies && quick_replies.map((btn, i) => {
             let quickReplyButton = createNode('BUTTON');
@@ -542,7 +587,7 @@
     }
 
     function createStartConversationCard() {
-        let startConversationDiv = createDiv(intercomMessengerBody, 'start-conversation-cards-container', 'start-conversation-cards-container default-container') //parent, id, className
+        let startConversationDiv = createDiv(messangerBodyView1, 'start-conversation-cards-container', 'start-conversation-cards-container default-container') //parent, id, className
         let startConversationHeading = createNode('P'), startConversationPara = createNode('P')
         startConversationHeading.innerHTML = 'Start a Conversation'
         startConversationHeading.className = 'start-a-conversation-heading d-font'
@@ -564,23 +609,28 @@
             createImg(startConversationImageContainer, src, '', '', startConversationImageStyle)
         })
         let startConversationBottomButtons = createDiv(startConversationDiv, 'start-conversation-bottom-buttons', 'start-conversation-bottom-buttons')
-        createButton(startConversationBottomButtons, '', 'start-conversation-btn', 'New Conversation')
+        createButton(startConversationBottomButtons, '', 'start-conversation-btn', 'New Conversation', function () {
+            // handle some ui to show second view
+            messangerBodyView1.style.display = 'none';
+            messengerBodyView2.style.display = 'block';
+            messengerBodyView2.style.marginTop = '50px';
+            view2Footer.style.display = 'block';
+            wrapper.style.marginBottom = '73px';
+            messangerHeader.style.overflow = 'hidden';
+            messangerHeader.style.height = '55px';
+            backToViewOneBtn.style.display = 'block';
+        })
         createButton(startConversationBottomButtons, '', 'see-prvious-btn', 'See Prvious')
-
-       
-
-
     }
 
     function createFindAnAnswerCard() {
-
-        let findAnAnswer_Div = createDiv(intercomMessengerBody, "findAnAnswer_id", "findAnAnswer_class default-container")
+        let findAnAnswer_Div = createDiv(messangerBodyView1, "findAnAnswer_id", "findAnAnswer_class default-container")
         let heading = createNode('p', "", "start-a-conversation-heading d-font", "Find an answer quickly", findAnAnswer_Div)
         let makeInput = document.createElement("INPUT")
         makeInput.setAttribute("type", "text");
         makeInput.setAttribute("placeholder", "Search for answer");
-        append(findAnAnswer_Div,makeInput)
-        createButton(findAnAnswer_Div,'','email_btn','->')
+        append(findAnAnswer_Div, makeInput)
+        createButton(findAnAnswer_Div, '', 'email_btn', '->')
 
     }
     // const url = 'https://nonchalant-soprano.glitch.me/generic';
