@@ -13,12 +13,31 @@
         body {
             margin-top: 30px;
         }
+
+        #messageArea {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="row">
+
+        <div id="userFormArea" class="row">
+            <div class="col-md-12">
+                <form id="userForm" onsubmit="event.preventDefault();">
+                    <div class="form-group">
+                        <label for="name">Enter Your Name</label>
+                        <input type="text" class="form-control" id="username">
+                        <br/>
+                        <input id="username-submit-btn" type="submit" class="btn btn-primary" value="Enter in Room">
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="messageArea" class="row">
             <div class="col-md-4">
                 <div class="alert alert-secondary">
                     <h3>Online Users</h3>
@@ -46,17 +65,41 @@
             var messageForm = document.getElementById('messageForm')
             var message = document.getElementById('message')
             var chat = document.getElementById('chat')
+            var userFormArea = document.getElementById('userFormArea')
+            var messageArea = document.getElementById('messageArea')
+            var userForm = document.getElementById('userForm')
+            var users = document.getElementById('users')
+            var username = document.getElementById('username')
 
             document.getElementById("submit-btn").addEventListener("click", () => {
                 socket.emit('send message', message.value)
                 message.value = ''
             });
 
-            socket.on('new message', (data) => {
+            document.getElementById("username-submit-btn").addEventListener("click", () => {
+                socket.emit('new user', username.value, (data) => {
+                    if (data) {
+                        userFormArea.style.display = 'none'
+                        messageArea.style.display = '-webkit-box'
+                    }
+                })
+                username.value = ''
+            });
+
+            socket.on('new message', (payload) => {
                 var div = document.createElement("div");
                 div.className = 'alert alert-secondary'
-                div.innerText = data.payload
+                div.innerText = payload.username + ': ' + payload.msg
                 chat.appendChild(div);
+            })
+
+            socket.on('get users', (data) => {
+                data && data.map((name, i) => {
+                    var li = document.createElement("li");
+                    li.className = 'list-group-item'
+                    li.innerText = name
+                    users.appendChild(li)
+                })
             })
         })()
     </script>
