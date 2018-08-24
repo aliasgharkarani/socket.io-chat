@@ -120,8 +120,8 @@
         function showViewOne(){ \
             messangerBodyView1.style.display = "block"; \
             backToViewOneBtn.style.display = "none"; \
-            messengerBodyView2.style.display = "none"; \
-            messengerBodyView2.style.marginTop = "50px"; \
+            messangerBodyView2.style.display = "none"; \
+            messangerBodyView2.style.marginTop = "50px"; \
             view2Footer.style.display = "none"; \
             wrapper.style.marginBottom = "5px"; \
             messangerHeader.style.overflow = "hidden"; \
