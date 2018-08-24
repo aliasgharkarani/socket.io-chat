@@ -1,0 +1,566 @@
+body{
+    padding: 0;
+    margin : 0;
+  }
+  
+  /* Style the header */
+  .header {
+      background-color: #f1f1f1;
+      padding: 20px;
+      text-align: center;
+  }
+  
+  h2{
+    color: #ccc;
+  }
+  
+  
+  /*  */
+          #intercom-container {
+              line-height: 1;
+          }
+  
+          #intercom-container .intercom-messenger,
+          #intercom-container .intercom-messenger-sheet {
+              display: -webkit-box;
+              display: -ms-flexbox;
+              display: flex;
+              -webkit-box-orient: vertical;
+              -webkit-box-direction: normal;
+              -ms-flex-direction: column;
+              flex-direction: column;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              right: 0;
+          }
+  
+          #intercom-container .intercom-messenger {
+              -webkit-box-pack: start;
+              -ms-flex-pack: start;
+              justify-content: flex-start;
+              position: absolute;
+              margin-bottom: 73px;
+          }
+  
+          .intercom-conversation-body,
+          .intercom-conversations-body,
+          .intercom-messenger,
+          .intercom-scrollable {
+              -webkit-overflow-scrolling: touch;
+              overflow-x: hidden;
+              overflow-y: auto;
+          }
+  
+          #intercom-container .intercom-home-screen-header {
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              padding: 24px 40px;
+              padding-bottom: 20px;
+              -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+              background: #6E3297;
+              height: 220px;
+          }
+  
+          #intercom-container .intercom-home-screen-header .intercom-home-screen-header-body-container{
+            transform: translateY(0px);
+            opacity: 1;
+          }
+  
+          #intercom-container .intercom-home-screen-header-logo {
+            display: flex;
+            flex-direction: row-reverse;
+          }
+  
+          #intercom-container .intercom-fit-text,
+          #intercom-container .intercom-fit-text>span {
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              font-size: 25px;
+          }
+  
+          #intercom-container .intercom-fit-text,
+          #intercom-container .intercom-fit-text>span {
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+          }
+  
+          #intercom-container .intercom-home-screen-header-greeting {
+              color: rgb(255, 255, 255);
+              display: block;
+              line-height: 1.5em;
+          }
+  
+          #intercom-container .intercom-home-screen-header-intro {
+              color: #eaeaea;
+              display: block;
+              font-size: 1em;
+              line-height: 1.5em;
+              overflow-wrap: break-word;
+              word-wrap: break-word;
+          }
+  
+  
+  .intercom-messenger{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-bottom: 10px;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    position: absolute;
+    
+  }
+  
+  /* width */
+  .intercom-messenger::-webkit-scrollbar {
+      width: 5px;
+  }
+  
+  /* Track */
+  .intercom-messenger::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 1px #6E3297; 
+      border-radius: 0px;
+  }
+   
+  /* Handle */
+  .intercom-messenger::-webkit-scrollbar-thumb {
+      background: #6E3297; 
+      border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  .intercom-messenger::-webkit-scrollbar-thumb:hover {
+      background: #6E3297; 
+  }
+  
+  
+  .intercom-messenger-header{
+    position: fixed;
+    width: 100%;
+  }
+  
+  .intercom-messenger-body{
+      margin-top: 195px;
+      padding: 0 20px 0 10px;
+      height: auto;
+      z-index: 1000;
+  }
+  
+  /* CHAT WIDNOW BODY CSS */
+  .textMessage{
+      background: #eaeaea;
+      padding: 5px 10px 5px 15px;
+      width: 60%;
+      border-radius: 25px;
+      margin-top: 10px;
+      overflow-x: auto;
+  }
+  
+  /* GENERIC CARD CSS */
+  .generic-cards-container{
+    display: flex;
+    overflow-y: hidden;
+    overflow-x: auto;
+  }
+  
+  .generic-container{
+      box-shadow: 0px 0px 10px #AAA;
+      border-radius: 15px;
+      background: #fff;
+      background-origin: border-box;
+      background-repeat: no-repeat;
+      background-position: top;
+      background-size: 100% 150px;
+      width: 100%;
+      min-width: 230px;
+      margin: 5px;
+  }
+  
+  .generic-title{
+      padding: 160px 0px 0px 10px;
+      text-align: left;
+      margin: 0;
+      font-size: 18px;
+  }
+  
+  .generic-subtitle{
+      margin: 0;
+      padding: 10px 0 5px 10px;
+      color: #777;
+      font-family: initial;
+  }
+  
+  .btn-generic, .button-card-btn{
+      border-top: 0.12em solid #eaeaea;
+  }
+  
+  /* BUTTON CARD CSS */
+  .button-card-container,
+  .list-card-container
+  {
+      box-shadow: 0px 0px 10px #AAA;
+      border-radius: 15px;
+      background-origin: border-box;
+      background-repeat: no-repeat;
+      background-position: top;
+      background-size: 100% 150px;
+      margin-top: 10px;
+      background: #fff;
+  }
+  
+  .button-card-container .button-card-title{
+    font-size: 18px;
+    background: #f1f0f0;
+    padding: 10px;
+    font-family: "Gill Sans", sans-serif;
+    color: #333;
+    font-weight: bold;
+    margin: 0;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+  
+  /* LIST CARD */
+  .list-item-container{
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: 1px solid #eaeaea;
+    padding: 10px;
+    min-height: 80px;
+  }
+  
+  .list-item-container .item-title{
+      font-size: 16px;
+      margin-top: 5px;
+      font-family: "Gill Sans", sans-serif;
+      font-weight: bold;
+      padding-right: 5px;
+  }
+  
+  .list-item-container .item-subtitle{
+    margin: 0;
+    margin-top: -8px;
+    font-size: 15px;
+    color: #666;
+    font-family: "Gill Sans", sans-serif;
+  }
+  
+  .list-item-button{
+    background: none;
+    border: 1px solid #0585FF;
+    color: #0585FF;
+    padding: 5px;
+    border-radius: 5px;
+    min-height: 30px;
+    min-width: 70px;
+    margin-top: 10px;
+    font-family: "Gill Sans", sans-serif;
+    font-weight: bold;
+    outline: none;
+  }
+  
+  /* chat window footer CSS */
+  .intercom-footer{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      min-height: 56px;
+      max-height: 200px;
+      border-top: 1px solid #e6e6e6;
+      z-index: 2147483002;
+  }
+  
+  .message-text-field-wrapper textarea{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      color: #000;
+      resize: none;
+      border: none;
+      -webkit-transition: background-color .2s ease,-webkit-box-shadow .2s ease;
+      transition: background-color .2s ease,-webkit-box-shadow .2s ease;
+      transition: background-color .2s ease,box-shadow .2s ease;
+      transition: background-color .2s ease,box-shadow .2s ease,-webkit-box-shadow .2s ease;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      padding: 18px;
+      padding-right: 100px;
+      padding-left: 29px;
+      width: 100%;
+      font-family: "intercom-font", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.33;
+      background-color: #fff;
+      white-space: pre;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      outline: none;
+      border-top: 1px solid #eaeaea;
+  }
+  
+  .intercom-composer-buttons{
+      position: absolute;
+      top: 0;
+      right: 29px;
+  }
+  
+  .intercom-composer-buttons button{
+      background: transparent;
+      border: none;
+      outline: none;
+      width: 25px;
+  }
+  
+  .intercom-composer-emoji-button{
+    padding-right: 25px;
+  }
+  
+  #intercom-container .intercom-composer-send-button{
+      width: 18px;
+      padding-left: 16px;
+      top: 1px;
+  }
+  
+  /* QUICK REPLY CSS */
+  .quick-reply-buttons{
+    position: fixed;
+    bottom: 76px;
+    width: 96%;
+    display: flex;
+    justify-content: space-between;
+    margin-left: -2%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background : #fff;
+  }
+  
+  .quick-reply-buttons .quick-replay-button{
+    background: none;
+    color: #228eff;
+    font-size: 14px;
+    cursor: pointer;
+    outline: none;
+    border-radius: 25px;
+    border: 1px solid #0585FF;
+    padding: 5px 10px 5px 10px;
+    margin: 3px;
+  }
+
+  /* receipt card CSS */
+  .receipt-card-header{
+    border-bottom: 1px solid rgb(234, 234, 234);
+    padding: 10px 15px 10px 15px;
+    width: 87%;
+    margin: 0 auto;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .receipt-card-detail{
+      padding: 10px;
+  }
+
+  .paid-label, .address-label{
+    margin: 0;
+    color: #777;
+  }
+
+  .paid-text,.address{
+    margin: 8px 0 0 0;
+  }
+
+  /* START CONVO CARD CSS */
+.start-conversation-cards-container{
+    margin-top: -40px !important;
+}
+
+.start-a-conversation-heading{
+    font-size: 20px;
+    padding: 0;
+    margin: 20px 20px 0 20px;
+    color: #EF3F7D;
+    font-weight: bold;
+}
+/*Find an answer css*/
+.findAnAnswer_class{
+   padding-bottom: 5%; 
+}
+.findAnAnswer_class input{
+    border: 1px solid #776;
+   border-radius: 3px;
+    padding-left: 20px;
+   outline: 0px;
+   height: 48px;
+   width: 70%;
+   font-size: 16.5px;
+    margin: 20px 20px 0 20px;
+    font-weight: 400
+}
+.findAnAnswer_class input::placeholder{
+    color:#776;
+}
+
+.email_btn{
+      height: 50px;
+    width: 56px;
+   margin-left: -6px;
+    border-radius: 5%;
+    border: none;
+    background: #6E3297;
+    color: #fff;
+    outline: none;
+    cursor: pointer;
+    font-size: 22px;
+}
+.start-a-conversation-para{
+    font-size: 15px;
+    padding: 0;
+    margin: 5px 20px 10px 20px;
+    color: #777;
+}
+
+.start-conversation-imgs{
+    width: 75%;
+    margin: 0 auto;
+}
+
+.start-conversation-bottom-buttons{
+    margin: 20px;
+    display: flex;
+}
+
+.start-conversation-btn{
+    height: 40px;
+    width: 60%;
+    border: none;
+    background: #EF3F7D;
+    border-radius: 25px;
+    color: #fff;
+    font-size: 15px;
+    outline: none;
+    cursor: pointer;
+}
+
+.see-prvious-btn{
+    height: 40px;
+    width: 35%;
+    border: none;
+    background: none;
+    border-radius: 25px;
+    color: #6E3297;
+    font-size: 15px;
+    outline: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+  /*practice card*/
+  #this-is-id-of-para{
+      color:red;
+      font-size: 20px
+  }
+  /* COMMON CSS */
+  .default-container{
+    box-shadow: 0px 0px 5px #AAA;
+    border-radius: 5px;
+    background: #fff;
+    background-origin: border-box;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: 100% 150px;
+    width: 100%;
+    min-width: 230px;
+    margin: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  
+  .card-title{
+    font-size: 18px;
+    font-family: "Gill Sans", sans-serif;
+    font-weight: bold;
+  }
+  
+  .default-fullwidth-btn{
+    width: 100%;
+    background: none;
+    border: none;
+    color: #228eff;
+    font-size: 18px;
+    padding: 10px 0 10px 0;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .lightGray{
+      color: #777;
+  }
+
+  .item-default-title{
+    font-size: 16px;
+    margin-top: 5px;
+    font-family: "Gill Sans", sans-serif;
+    font-weight: bold;
+    padding-right: 5px;
+}
+
+.item-default-subtitle{
+    margin: 0;
+    margin-top: -8px;
+    font-size: 15px;
+    color: #666;
+    font-family: "Gill Sans", sans-serif;
+  }
+
+.d-font{
+    font-family: "Gill Sans", sans-serif;
+}
+
+.p5 { padding: 5px !important; }
+.p10 { padding: 10px !important; }
+.p15 { padding: 15px !important; }
+.p20 { padding: 20px !important; }
+
+.m5 { margin: 5px !important; }
+.m10 { margin: 10px !important; }
+.m15 { margin: 15px !important; }
+.m20 { margin: 20px !important; }
+  
+  /* COMMON BLUE HORIVONTAL SCROLLBAR */
+  /* width */
+  .blue-horizontal-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+  }
+  
+  /* Track */
+  .blue-horizontal-scroll::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 1px #6E3297; 
+      border-radius: 0px;
+  }
+   
+  /* Handle */
+  .blue-horizontal-scroll::-webkit-scrollbar-thumb {
+      background: #6E3297; 
+      border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  .blue-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+      background: #6E3297; 
+  }

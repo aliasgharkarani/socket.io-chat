@@ -13,6 +13,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 })
 
+app.get('/smoothflow', (req, res) => {
+    res.sendFile(__dirname + '/client.js');
+})
+
 io.sockets.on('connection', (socket) => {
     connections.push(socket);
     console.log('Connection: %s sockets connected', connections.length);
