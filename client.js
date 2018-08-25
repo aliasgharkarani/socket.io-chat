@@ -12,7 +12,7 @@
     iframe.setAttribute("class", "chat-window-container");
     iframe.setAttribute("id", "chat-window-container");
     document.body.appendChild(iframe);
-    var body = ' \
+    var body = ` \
         <div id="intercom-container"> \
         <div id="wrapper" class="intercom-messenger intercom-messenger-home-screen intercom-messenger-from-booting" onscroll="scrollMessangerBody()"> \
             <div class="intercom-messenger-header"> \
@@ -50,6 +50,83 @@
     </div> \
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" crossorigin="anonymous"></script>   \\\
     <script> \
+        var genericCard = 0;
+        // some javascript common function which are use in multiple times \
+        function createNode(element, id, className, innerHTML, parent) { \
+            let el = document.createElement(element); \
+            if (id) { \
+                el.id = id; \
+            } \
+            if (className) { \
+                el.className = className; \
+            } \
+            if (innerHTML) { \
+                el.innerHTML = innerHTML; \
+            } \
+            if (parent) { \
+                append(parent, el); \
+            } \
+            return el; // Create the type of element you pass in the parameters \
+        } \
+        \
+        function createDiv(parent, id, className, style) { \
+            let div = createNode("DIV"); \
+            if (id) { \
+                div.id = id; \
+            } \
+            if (className) { \
+                div.className = className; \
+            } \
+            if (style) { \
+                div = addStyles(div, style); \
+            } \
+            return parent.appendChild(div); \
+        } \
+        \
+        function addStyles(el, style) { \
+            for (var key in style) { \
+                el.style[key] = style[key]; \
+            } \
+            return el; \
+        } \
+    </script> \
+    <script> \
+        function append(parent, el) { \
+            return parent.appendChild(el);
+        } \
+        \
+        // Create generic card function \
+        function createGenericCard(card, divID) { \
+            let h5 = createNode("h5"), p = createNode("p") \
+            h5.innerHTML = card.title; \
+            h5.className = "generic-title"; \
+            p.innerHTML = card.subtitle; \
+            p.className = "generic-subtitle"; \
+            let parent = document.getElementById(divID); \
+            append(parent, h5); \
+            append(parent, p); \
+            // Create Buttons Parent Div \
+            if (card.buttons) { \
+                let div = createNode("DIV"); \
+                div.id = "generic-buttons-" + genericCard; \
+                div.className = "generic-buttons"; \
+                append(parent, div); \
+            } \
+            \
+            // create buttons \
+            card.buttons && card.buttons.map((button, i) => { \
+                let parent = document.getElementById("generic-buttons-" + genericCard); \
+                let btn = createNode("BUTTON"); \
+                btn.title = button.title; \
+                btn.innerHTML = button.title; \
+                btn.className = "btn-generic default-fullwidth-btn"; \
+                btn.id = "generic-btn-" + genericCard + "-" + i; \
+                append(parent, btn); \
+            }); \
+            genericCard++; \
+        } \
+    </script> \
+    <script> \
         var socket = io.connect("localhost:3100"); \
         var wrapper = document.getElementById("wrapper"); \
         var messangerBodyView2 = document.getElementById("messenger-body-view-2-id");\
@@ -61,10 +138,68 @@
         messangerBodyView2.style.display = "none"; \
         view2Footer.style.display = "none"; \
         backToViewOneBtn.style.display = "none"; \
-        socket.on("new message", (payload) => { \
+        \
+
+        function createCard(payload) { \
+            switch (payload.template_type) { \
+                case "generic": \
+                    createDiv(messangerBodyView1, "generic-cards-container", "generic-cards-container blue-horizontal-scroll"); \
+                    var genericCardsContainer = document.getElementById("generic-cards-container"); \
+                    payload.elements && payload.elements.map((card, i) => { \
+                        let divID = payload.template_type + "-" + genericCard; \
+                        let div = createNode("div"); \
+                        div.id = divID; \
+                        div.className = "generic-container"; \
+                        append(genericCardsContainer, div); \
+                        createGenericCard(card, divID); \
+                    }); \
+                    break; \
+                    \
+                case "button": \
+                    let divID = "button-card-" + buttonCard; \
+                    let div = createNode("div"); \
+                    div.id = divID; \
+                    div.className = "button-card-container"; \
+                    append(messangerBodyView1, div); \
+                    createButtonCard(payload, divID); \
+                    break; \
+                    \
+                case "list": \
+                    let ListItemParentId = "list-card-" + listCardCount; \
+                    let ListItemParentDiv = createNode("div"); \
+                    ListItemParentDiv.id = ListItemParentId; \
+                    ListItemParentDiv.className = "list-card-container"; \
+                    append(messangerBodyView1, ListItemParentDiv); \
+                    createListCard(payload, ListItemParentId); \
+                    break; \
+                    \
+                case "media": \
+                    payload.elements && payload.elements.map((card, i) => { \
+                        let mediaCardParentId = "media-card-" + mediaCardCount; \
+                        let mediaCardParentDiv = createNode("div"); \
+                        mediaCardParentDiv.id = mediaCardParentId; \
+                        mediaCardParentDiv.className = "media-card-container default-container"; \
+                        append(messangerBodyView1, mediaCardParentDiv); \
+                        createMediaCard(card, mediaCardParentId); \
+                    }); \
+                    break; \
+                    \
+                case "receipt": \
+                    let receiptItemParentId = "receipt-card-" + receiptCardCount; \
+                    createDiv(messangerBodyView1, receiptItemParentId, "receipt-card-container default-container"); \
+                    createReceiptCard(payload, receiptItemParentId); \
+                    break; \
+            } \
+        } \
+        socket.on("new message", (data) => { \
+            if(data.message){
+                let { message: { attachment: { payload } } } = data;
+                console.log('payload',payload)
+                createCard(payload);
+            }
             createDiv(messangerBodyView2, "textMessage-" + textMessageCount, "textMessage"); \
             var textMessageParent = document.getElementById("textMessage-" + textMessageCount); \
-            textMessageParent.innerHTML = payload.msg; \
+            textMessageParent.innerHTML = data.msg; \
             textMessageCount++; \
         }) \
     </script> \
@@ -128,7 +263,7 @@
             messangerHeader.style.height = "220px"; \
         }\
       </script> \
-    '
+    `
 
     iframe.contentWindow.document.write(body);
     // add socket.io script tag as CDN
@@ -146,6 +281,14 @@
     iframeCssFile.media = 'all';
     iframe.contentWindow.document.head.appendChild(iframeCssFile)
     const idocument = iframe.contentWindow.document;
+
+    // this code identify which card you want to create
+    var messangerBodyView1 = idocument.getElementById('intercom-messenger-body-id');
+    var messengerBodyView2 = idocument.getElementById('messenger-body-view-2-id');
+    var view2Footer = idocument.getElementById('intercom-footer-id');
+    var wrapper = idocument.getElementById("wrapper");
+    var messangerHeader = idocument.getElementById("messanger-header");
+    var backToViewOneBtn = idocument.getElementById("backToViewOneBtn");
 
     // some javascript common function which are use in multiple times
     function createNode(element, id, className, innerHTML, parent) {
@@ -446,13 +589,6 @@
         receiptCardCount++
     }
 
-    // this code identify which card you want to create
-    var messangerBodyView1 = idocument.getElementById('intercom-messenger-body-id');
-    var messengerBodyView2 = idocument.getElementById('messenger-body-view-2-id');
-    var view2Footer = idocument.getElementById('intercom-footer-id');
-    var wrapper = idocument.getElementById("wrapper");
-    var messangerHeader = idocument.getElementById("messanger-header");
-    var backToViewOneBtn = idocument.getElementById("backToViewOneBtn");
     function createCard(payload) {
         switch (payload.template_type) {
             case 'generic':

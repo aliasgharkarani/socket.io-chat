@@ -1,7 +1,10 @@
 var express = require('express');
+const bodyParser = require('body-parser');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+
+app.use(bodyParser.json());
 
 users = [];
 connections = [];
@@ -15,6 +18,11 @@ app.get('/', (req, res) => {
 
 app.get('/smoothflow', (req, res) => {
     res.sendFile(__dirname + '/client.js');
+})
+
+app.post('/reply', (req, res) => {
+    io.sockets.emit('new message', req.body)
+    res.send(req.body)
 })
 
 io.sockets.on('connection', (socket) => {
