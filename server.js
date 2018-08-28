@@ -3,6 +3,14 @@ const bodyParser = require('body-parser');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+const redis = require("redis");
+// const exphbs = require('express-handlebars')
+// Create Redis Client
+let client = redis.createClient();
+
+client.on('connect', function(){
+    console.log('Redis Connected')
+})
 
 app.use(bodyParser.json());
 
@@ -11,7 +19,29 @@ connections = [];
 
 server.listen(process.env.PORT || 3100);
 console.log('Server is Running...')
+// api for redis
+app.get('/user',function(req,res,next){
+    res.send('search users')
+})
 
+app.post('/search',function(req,res,send){
+    res.send("HELLo")
+    let id = req.body
+    console.log("this is id",id)
+    client.hgetall('id',function(err,obj){
+        if(!obj){
+            res.render('searchusers',{
+                error: 'user does not exist'
+            })
+        }else{
+            obj.id = id;
+            res.render('details',{
+                user: obj
+            })
+        }
+    });
+})
+//
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 })

@@ -13,7 +13,7 @@
         body {
             margin-top: 30px;
         }
-
+        
         #messageArea {
             display: none;
         }
@@ -23,6 +23,13 @@
 <body>
     <div class="container">
 
+        <div class="Redis_Practice">
+            {{#if error}} <span>{{error}}</span> {{/if}}
+            <form action="/search" method="POST">
+                <input type="text" placeholder="search users..." />
+                <button>Search</button>
+            </form>
+        </div>
         <div id="userFormArea" class="row">
             <div class="col-md-12">
                 <form id="userForm" onsubmit="event.preventDefault();">
@@ -112,6 +119,8 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js" crossorigin="anonymous" async> </script>
+
 </body>
 
 </html>

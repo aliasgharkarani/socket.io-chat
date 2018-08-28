@@ -5,6 +5,7 @@
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "*",
+    "redis": "^2.8.0",
     "socket.io": "*"
   },
   "scripts": {},
