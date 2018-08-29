@@ -4,7 +4,16 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 const redis = require("redis");
-// const exphbs = require('express-handlebars')
+var redisSession = require('node-redis-session');
+var session = require('express-session')
+ 
+var sessionstorage = require('sessionstorage');
+var cookieParser = require('cookie-parser');
+// Redis Session
+app.use(cookieParser());
+app.use(redisSession());
+a = new redisSession(); 
+// rsapp = "myapp";
 // Create Redis Client
 let client = redis.createClient();
 
@@ -21,25 +30,17 @@ server.listen(process.env.PORT || 3100);
 console.log('Server is Running...')
 // api for redis
 app.get('/user',function(req,res,next){
-    res.send('search users')
+    res.send("hello")
 })
 
 app.post('/search',function(req,res,send){
-    res.send("HELLo")
-    let id = req.body
-    console.log("this is id",id)
-    client.hgetall('id',function(err,obj){
-        if(!obj){
-            res.render('searchusers',{
-                error: 'user does not exist'
-            })
-        }else{
-            obj.id = id;
-            res.render('details',{
-                user: obj
-            })
-        }
-    });
+    // res.send("HELLo")
+    let data = req.body.data
+   var e = sessionstorage.setItem('001',data);
+    console.log("this is id",data)
+  var b =  sessionstorage.getItem('001')
+console.log('get items',b)    
+    
 })
 //
 app.get('/', (req, res) => {

@@ -24,10 +24,9 @@
     <div class="container">
 
         <div class="Redis_Practice">
-            {{#if error}} <span>{{error}}</span> {{/if}}
-            <form action="/search" method="POST">
-                <input type="text" placeholder="search users..." />
-                <button>Search</button>
+            <form action="/search" method="POST" onsubmit="event.preventDefault();">
+                <input type="text" id="myId" placeholder="search users..." />
+                <button onClick='userSearch()'>Search</button>
             </form>
         </div>
         <div id="userFormArea" class="row">
@@ -67,6 +66,27 @@
     </div>
 
     <script>
+        var arr = []
+     function userSearch(){
+           var a =  document.getElementById('myId').value;
+       console.log("input value..",a)
+
+       arr.push(a)
+       var b = '_' + Math.random().toString(36).substr(2, 9);
+               document.getElementById('myId').value = '';
+    document.cookie = "myCookie=" + JSON.stringify({data: arr, key: b});
+    //    document.cookie= arr
+    //    document.cookie = b
+       fetch('/search', {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: 'post',
+            body: JSON.stringify({ data: a })
+        })
+    }
+     
         (() => {
             var socket = io.connect()
             var messageForm = document.getElementById('messageForm')
